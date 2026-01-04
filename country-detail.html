@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="description" content="国家创新指数对比页面，展示两个国家创新数据的详细信息">
+    <meta name="keywords" content="国家创新,数据可视化,国家对比">
+    <meta name="theme-color" content="#2f89cf">
+    <meta name="author" content="数据可视化团队">
+    <title>国家创新指数对比</title>
+    <!-- 图标 -->
+    <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+    <link rel="apple-touch-icon" href="images/logo.svg">
+    <!-- CSS文件 -->
+    <link rel="preload" href="css/index.css?v=1.0" as="style">
+    <link rel="stylesheet" href="css/index.css?v=1.0">
+    <link rel="preload" href="css/company-detail.css?v=1.1" as="style">
+    <link rel="stylesheet" href="css/company-detail.css?v=1.1">
+
+    <!-- 预加载关键字体 -->
+    <link rel="preload" href="font/DS-DIGIT.TTF" as="font" crossorigin>
+    <!-- 国家对比页面样式 -->
+    <link rel="preload" href="css/country-detail.css?v=1.0" as="style">
+    <link rel="stylesheet" href="css/country-detail.css?v=1.0">
+</head>
+<body>
+    <!-- 头部的盒子 -->
+    <header class="header">
+        <h1>全球企业创新指数(GEII)展示大屏</h1>
+        <div class="control-panel">
+            <div class="year-selector">
+                <label for="yearSelect">数据日期：</label>
+                <select id="yearSelect" class="year-select" aria-label="选择数据年份">
+                    <option value="2024">2024</option>
+                    <option value="2025" selected>2025</option>
+                </select>
+            </div>
+        </div>
+        <div class="showTime" aria-live="polite" role="status" id="currentTime"></div>
+        <script>
+            // 禁止缩放功能
+            (function() {
+              // 阻止触摸缩放
+              document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              });
+              
+              let lastTouchEnd = 0;
+              document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                  e.preventDefault();
+                }
+                lastTouchEnd = now;
+              }, false);
+              
+              // 阻止触摸移动缩放
+              document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              }, { passive: false });
+              
+              // 阻止键盘缩放
+              document.addEventListener('keydown', function(e) {
+                // 阻止Ctrl+和Ctrl-
+                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.keyCode === 187 || e.keyCode === 189)) {
+                  e.preventDefault();
+                }
+                // 阻止Ctrl+鼠标滚轮
+                if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-')) {
+                  e.preventDefault();
+                }
+              });
+              
+              // 阻止鼠标滚轮缩放
+              document.addEventListener('wheel', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                  e.preventDefault();
+                }
+              }, { passive: false });
+            })();
+            
+            // 时间显示优化版
+            function formatNumber(num) {
+            return num.toString().padStart(2, '0');
+            }
+
+            function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = formatNumber(now.getMonth() + 1);
+            const day = formatNumber(now.getDate());
+            const hours = formatNumber(now.getHours());
+            const minutes = formatNumber(now.getMinutes());
+            const seconds = formatNumber(now.getSeconds());
+            
+            document.querySelector(".showTime").innerHTML = 
+                `当前时间：${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
+            }
+
+            // 立即执行一次，避免页面加载后延迟显示
+            updateTime();
+            
+            // 每秒更新一次
+            const timeInterval = setInterval(updateTime, 1000);
+        </script>
+    </header>
+
+    <!-- 页面主体部分 -->
+    <main class="mainbox">
+        <div class="detail-container-column">
+            <!-- 国家对比信息 -->
+            <section class="country-comparison-panel">
+                <div class="country-info">
+                <div class="country-item">
+                    <div class="country-flag-container-left">
+                        <img src="" alt="国旗" class="country-flag" id="country1Flag">
+                    </div>
+                    <div class="country-details-left">
+                        <h3 class="country-name" id="country1Name">国家1</h3>
+                        <div class="country-rank">
+                            <span class="rank-label">排名:</span>
+                            <span class="rank-value" id="country1Rank">1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vs-symbol">VS</div>
+                <div class="country-item">
+                    <div class="country-details-right">
+                        <h3 class="country-name" id="country2Name">国家2</h3>
+                        <div class="country-rank">
+                            <span class="rank-label">排名:</span>
+                            <span class="rank-value" id="country2Rank">2</span>
+                        </div>
+                    </div>
+                    <div class="country-flag-container-right">
+                        <img src="" alt="国旗" class="country-flag" id="country2Flag">
+                    </div>
+                </div>
+            </div>
+                <!-- 企业上榜总频次和产业图表 -->
+                <div class="country-freq-and-industry">
+                    <div class="country-freq">
+                        <!-- 左侧国家 -->
+                        <div class="country-freq-item">
+                            <div class="freq-and-select-container">
+                                <span class="freq-total">国家企业上榜总频次：<span class="freq-value" id="country1Freq">0</span></span>
+                                <div class="country-select-container">
+                                    <select id="country1Select" class="country-select">
+                                        <!-- 选项将通过JavaScript动态生成 -->
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 左侧国家图表 -->
+                            <div id="industryRankChart1" class="chart-container"></div>
+                        </div>
+                        
+                        <!-- 产业按钮 -->
+                        <div id="industryButtons" class="industry-buttons"></div>
+                        
+                        <!-- 右侧国家 -->
+                        <div class="country-freq-item">
+                            <div class="freq-and-select-container">
+                                <span class="freq-total">国家企业上榜总频次：<span class="freq-value" id="country2Freq">0</span></span>
+                                <div class="country-select-container">
+                                    <select id="country2Select" class="country-select">
+                                        <!-- 选项将通过JavaScript动态生成 -->
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 右侧国家图表 -->
+                            <div id="industryRankChart2" class="chart-container"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 企业数据表格 -->
+                <div class="country-enterprise-data">
+                    <!-- 标题图片 -->
+                    <div class="table-title-container">
+                        <img src="images/subtitle.png" alt="subtitle" class="subtitle-img">
+                        <h3 class="table-title-text">企业创新指数排名</h3>
+                    </div>
+                    <div class="country-freq">
+                        <!-- 左侧国家企业表格 -->
+                        <!-- <div class="country-freq-item"> -->
+                            <!-- 左侧国家企业表格 -->
+                            <div class="table-container">
+                                <table id="country1EnterpriseTable" class="enterprise-table">
+                                    <thead>
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>企业</th>
+                                            <th>综合得分</th>
+                                            <th>知识创新</th>
+                                            <th>技术创新</th>
+                                            <th>创新协作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        <!-- </div> -->
+                        
+                        <!-- 中间空容器，保持布局对称 -->
+                        <!-- <div class="table-spacer"></div> -->
+                        
+                        <!-- 右侧国家企业表格 -->
+                        <!-- <div class="country-freq-item"> -->
+                            <!-- 右侧国家企业表格 -->
+                            <div class="table-container">
+                                <table id="country2EnterpriseTable" class="enterprise-table">
+                                    <thead>
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>企业</th>
+                                            <th>综合得分</th>
+                                            <th>知识创新</th>
+                                            <th>技术创新</th>
+                                            <th>创新协作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页面底部 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>全球企业创新指数(GEII)展示大屏 &copy; 2025 数据可视化团队</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/jquery.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/flexible.js"></script>
+
+    
+    <!-- 国家对比页面JavaScript -->
+    <script src="js/country-detail.js"></script>
+</body>
+</html>

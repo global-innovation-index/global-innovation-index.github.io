@@ -1,0 +1,386 @@
+.country-comparison-panel {
+    padding: 0 0.1875rem 0;
+    margin: 0 0.3rem;
+}
+
+.country-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(47, 138, 207, 0.072);
+    border-radius: 6px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.country-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    justify-content: center;
+}
+
+.country-flag-container-left {
+    margin-right: 20px;
+}
+.country-flag-container-right{
+    margin-left: 20px;
+}
+.country-flag {
+    width: 80px;
+    height: 60px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+}
+
+.country-details-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.country-details-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* 国家选择器容器样式 */
+.country-select-container {
+    margin: 0 5px;
+}
+
+/* 国家选择器样式 */
+.country-select {
+    background: rgba(47, 138, 207, 0.3);
+    border: 1px solid rgba(47, 138, 207, 0.5);
+    border-radius: 5px;
+    color: #fff;
+    padding: 3px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    min-width: 100px;
+    transition: all 0.3s ease;
+}
+
+.country-select:hover {
+    background: rgba(47, 138, 207, 0.5);
+    border-color: rgba(47, 138, 207, 0.8);
+}
+
+/* 下拉列表样式 */
+.country-select {
+    /* 限制下拉列表最大高度，超过10项显示滚动条 */
+    max-height: 180px; /* 约10个选项的高度 */
+    overflow-y: auto;
+}
+
+.country-select option {
+    background: rgba(30, 39, 54, 0.9);
+    color: #fff;
+    max-height: 180px; 
+    overflow-y: auto;
+}
+
+/* 禁用选项样式 */
+.country-select option:disabled {
+    background: rgba(30, 39, 54, 0.6);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+}
+
+/* 自定义滚动条样式 */
+.country-select::-webkit-scrollbar {
+    width: 6px;
+}
+
+.country-select::-webkit-scrollbar-track {
+    background: rgba(47, 138, 207, 0.1);
+    border-radius: 3px;
+}
+
+.country-select::-webkit-scrollbar-thumb {
+    background: rgba(47, 138, 207, 0.6);
+    border-radius: 3px;
+}
+
+.country-select::-webkit-scrollbar-thumb:hover {
+    background: rgba(47, 138, 207, 0.8);
+}
+
+/* 国家名称样式 */
+.country-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.country-rank {
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rank-label {
+    opacity: 0.8;
+}
+
+.rank-value {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 20px;
+}
+
+.vs-symbol {
+    color: #fff;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 0 30px;
+    opacity: 0.8;
+}
+
+/* 企业上榜总频次与产业图表容器 */
+.country-freq-and-industry {
+    background: rgba(47, 138, 207, 0.072);
+    /* border: 1px solid rgba(47, 138, 207, 0.322); */
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-bottom: 5px;
+}
+
+/* 企业数据表格容器 */
+.country-enterprise-data {
+    background: rgba(47, 138, 207, 0.072);
+    /* border: 1px solid rgba(47, 138, 207, 0.322); */
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    height: 280px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 表格容器 */
+.table-container {
+    width: 100%;
+    overflow-y: auto;
+    height: 200px;
+    margin: 0 auto;
+}
+
+/* 企业数据表格 */
+.enterprise-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+    font-size: 14px;
+}
+
+/* 表格头部 */
+.enterprise-table th {
+    background: rgba(47, 138, 207, 0.3);
+    border: 1px solid rgba(47, 138, 207, 0.5);
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-size: 12px;
+}
+
+/* 表格行 */
+.enterprise-table td {
+    border: 1px solid rgba(47, 138, 207, 0.3);
+    padding: 6px 8px;
+    text-align: center;
+    font-size: 10px;
+}
+
+/* 表格行悬停效果 */
+.enterprise-table tbody tr:hover {
+    background: rgba(47, 138, 207, 0.2);
+}
+
+/* 表格标题容器 */
+.table-title-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* 标题图片 */
+.subtitle-img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    display: block;
+}
+
+/* 标题文字 */
+.table-title-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
+
+/* 中间空容器，保持布局对称 */
+.table-spacer {
+    width: 140px; /* 与产业按钮容器宽度一致 */
+    flex-shrink: 0; /* 防止被压缩 */
+}
+
+/* 确保表格在小容器内可滚动 */
+.table-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: rgba(47, 138, 207, 0.5);
+    border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(47, 138, 207, 0.7);
+}
+
+/* 两个国家的布局 */
+.country-freq {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+    /* flex: 1;
+    overflow: hidden;
+    height: 150px; */
+}
+
+/* 单个国家的容器 */
+.country-freq-item {
+    flex: 1;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 20px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 230px;
+    min-width: 0; /* 确保内容不会溢出容器 */
+}
+
+/* 上榜总频次 - 左上角小字体 */
+.freq-total {
+    position: relative;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+}
+
+/* 频次和选择器容器 */
+.freq-and-select-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+/* 上榜频次数值 */
+.freq-value {
+    color: #ff9800;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'DS-Digital', monospace;
+    margin-left: 8px;
+}
+
+/* 国家选择器容器样式 */
+.country-select-container {
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* 国家选择器样式 */
+.country-select {
+    background: rgba(47, 138, 207, 0.3);
+    border: 1px solid rgba(47, 138, 207, 0.5);
+    border-radius: 5px;
+    color: #fff;
+    padding: 3px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    min-width: 100px;
+    transition: all 0.3s ease;
+    line-height: 1.2;
+}
+
+/* 图表容器 */
+.chart-container {
+    flex: 1;
+    width: 100%;
+    height: 350px;
+    margin-top: 5px;
+    min-width: 0; /* 确保内容不会溢出容器 */
+}
+
+/* 产业按钮容器 */
+.industry-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    width: 140px; /* 设置固定宽度，确保两侧图表容器宽度一致 */
+    flex-shrink: 0; /* 防止按钮容器被压缩 */
+}
+
+/* 产业按钮样式 */
+.industry-btn {
+    background: rgba(47, 138, 207, 0.3);
+    border: 1px solid rgba(47, 138, 207, 0.5);
+    border-radius: 5px;
+    color: #fff;
+    padding: 3px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    min-width: 120px;
+}
+
+.industry-btn:hover {
+    background: rgba(47, 138, 207, 0.5);
+    border-color: rgba(47, 138, 207, 0.8);
+}
+
+.industry-btn.active {
+    background: rgba(76, 175, 80, 0.6);
+    border-color: rgba(76, 175, 80, 0.8);
+}

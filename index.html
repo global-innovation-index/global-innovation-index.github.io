@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0" />
+    <title>全球企业创新指数</title>
+    <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <!-- 头部的盒子 -->
+    <header>
+      <h1>全球企业创新指数(GEII)展示大屏</h1>
+      <div class="control-panel">
+        <div class="year-selector">
+          <label for="yearSelect">数据日期：</label>
+          <select id="yearSelect" class="year-select">
+            <option value="2024">2024</option>
+            <option value="2025" selected>2025</option>
+          </select>
+        </div>
+      </div>
+      <div class="showTime"></div>
+      <script>
+        // 禁止缩放功能
+        (function() {
+          // 阻止触摸缩放
+          document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+              e.preventDefault();
+            }
+          });
+          
+          let lastTouchEnd = 0;
+          document.addEventListener('touchend', function(e) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+              e.preventDefault();
+            }
+            lastTouchEnd = now;
+          }, false);
+          
+          // 阻止触摸移动缩放
+          document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1) {
+              e.preventDefault();
+            }
+          }, { passive: false });
+          
+          // 阻止键盘缩放
+          document.addEventListener('keydown', function(e) {
+            // 阻止Ctrl+和Ctrl-
+            if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.keyCode === 187 || e.keyCode === 189)) {
+              e.preventDefault();
+            }
+            // 阻止Ctrl+鼠标滚轮
+            if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-')) {
+              e.preventDefault();
+            }
+          });
+          
+          // 阻止鼠标滚轮缩放
+          document.addEventListener('wheel', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+            }
+          }, { passive: false });
+        })();
+        
+        // 时间显示优化版
+        function formatNumber(num) {
+          return num.toString().padStart(2, '0');
+        }
+
+        function updateTime() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = formatNumber(now.getMonth() + 1);
+          const day = formatNumber(now.getDate());
+          const hours = formatNumber(now.getHours());
+          const minutes = formatNumber(now.getMinutes());
+          const seconds = formatNumber(now.getSeconds());
+          
+          document.querySelector(".showTime").innerHTML = 
+            `当前时间：${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
+        }
+
+        // 立即执行一次，避免页面加载后延迟显示
+        updateTime();
+        
+        // 每秒更新一次
+        const timeInterval = setInterval(updateTime, 1000);
+      </script>
+    </header>
+
+    <!-- 页面主体部分 -->
+    <section class="mainbox">
+      <div class="column">
+        <div class="panel table top-panel">
+          <h2>全球企业创新指数排名</h2>
+          <div class="chart-scrollbar" id="tableChart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line bottom-panel">
+          <h2>企业知识创新画像</h2>
+          <!-- 图表3控制面板 -->
+          <!-- 二级指标按钮 -->
+          <div class="secondary-indicator-buttons" id="secondaryIndicatorButtons">
+          <!-- 按钮由JavaScript动态生成 -->
+          </div>
+          <!-- 三级指标按钮（仅知识创新产出显示） -->
+          <div class="third-indicator-buttons" id="thirdIndicatorButtons" style="display: none;">
+            <!-- 按钮由JavaScript动态生成 -->
+          </div>
+          <div class="chart" id="indicatorChart"></div>
+          <div class="panel-footer"></div>
+        </div>
+
+      </div>
+      <div class="column">
+        <!-- 动态产业表格 -->
+         <div class="industry-buttons" id="industryButtons"></div>
+        <!-- 原有地图模块 -->
+        <div class="map">
+          <div class="map3"></div>
+          <div class="MapChart"></div>
+          <div class="panel col">
+            <h2>企业创新协作画像</h2>
+            <!-- 二级指标按钮 -->
+            <div class="secondary-indicator-buttons" id="collaborationSecondaryButtons">
+            <!-- 按钮由JavaScript动态生成 -->
+            </div>
+            <div class="chart" id="collaborationChart"></div>
+            <div class="panel-footer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="panel bar2 top-panel">
+          <h2>国家/地区入围企业数量排名</h2>
+          <div class="rankChart" id="countryChart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line2 bottom-panel">
+          <h2>企业技术创新画像</h2>
+            <!-- 二级指标按钮 -->
+            <div class="secondary-indicator-buttons" id="techSecondaryIndicatorButtons">
+              <!-- 按钮由JavaScript动态生成 -->
+            </div>
+            <!-- 三级指标按钮（仅技术创新影响显示） -->
+            <div class="third-indicator-buttons" id="techThirdIndicatorButtons" style="display: none;">
+              <!-- 按钮由JavaScript动态生成 -->
+            </div>
+            <div class="chart" id="techInnovationChart"></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+    </section>
+    <script src="js/flexible.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <!-- 先引入jquery -->
+    <script src="js/jquery.js"></script>
+    <!-- 世界地图数据通过JSON文件加载 -->
+    <!-- 引入其他的公共组件 -->
+    <script src="js/data-loader.js"></script>
+    <script src="js/industry-manager.js"></script>
+    <script src="js/chart-manager.js"></script>
+    <script src="js/data-utils.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

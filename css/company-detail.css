@@ -1,0 +1,561 @@
+/* 企业详情页样式 */
+/* 声明字体*/
+@font-face {
+  font-family: electronicFont;
+  src: url(../font/DS-DIGIT.TTF);
+}
+/* 修复页面滚动问题 */
+body {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* 企业logo样式 */
+#companyLogo {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+/* 图案样式 */
+.table-line{
+    display: block;/*使用此效果移动图片位置*/
+    position: relative;
+    width: 6rem;
+    margin-top: 0;
+    margin-top: -0.3rem;
+}
+
+/* 详情页面容器 */
+.mainbox .detail-container-column {
+  flex: 3;
+  height: 100%;
+}
+.mainbox .detail-container-column:nth-child(2) {
+  flex: 5;
+  margin: 0 0.125rem 0.1875rem;
+}
+
+/* 企业基本信息面板 */
+.company-info-panel {
+    padding: 0 0.1875rem 0;
+    margin-left: 0.3rem;
+}
+.company-score-panel {
+    padding: 0 0.1875rem 0;
+    margin-right: 0.3rem;
+    width: 400px;
+}
+
+
+/* 企业信息内容容器 */
+.info-content {
+    margin-top: 0.3rem;
+    margin-bottom: 0.1rem; /* 减小与下方元素的间距 */
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: space-between;
+}
+.info-item span {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 500;
+}
+.info-item label {
+    font-size: 16px;
+    color: #8a9ba8;
+    font-weight: 500;
+} 
+.info-rank{
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+}
+/* 论文专利信息项 */
+.paper-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem; 
+    margin-top: 1rem;
+}
+.paper-item span {
+    font-size: 30px;
+    color: #fff;
+}
+.paper-item-content{
+    margin-left: 0.1rem;
+    margin-right: 0.2rem;
+}
+.paper-item-content label:first-of-type{
+    font-size: 12px;
+    font-weight: 500;
+    color: #93bcdb;
+} 
+.paper-item-content label:last-of-type{
+    font-size: 10px;
+    font-weight: 500;
+    color: #93bcdb;
+}
+
+/* 各领域创新指数选择样式 */
+.industry-select{
+    margin-top: 1rem;
+}
+.industry-select h2{
+    font-size: 0.25rem;
+    color: #fff;
+    font-weight: 400;
+    letter-spacing: 0.03rem;
+    display: block;/*使用此效果移动位置*/
+    position: relative;
+    margin-top: -0.4rem;
+    text-align: center;
+}
+
+.year-btn {
+    background-color: rgba(47, 137, 207, 0.3);
+    color: #b8c9d6;
+    border: 1px solid rgba(47, 137, 207, 0.6);
+    padding: 0.05rem 0.2rem;
+    margin: 0 0.05rem;
+    cursor: pointer;
+    font-size: 0.16rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.year-btn:hover:not(:disabled) {
+    background-color: rgba(47, 137, 207, 0.5);
+    color: #fff;
+}
+
+.year-btn.active {
+    background-color: #2f89cf;
+    color: #fff;
+    border-color: #2f89cf;
+}
+
+.year-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.industry-score{
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.1rem;
+    margin-left: 0.5rem;
+    position: relative;
+    z-index: 100; /* 设置更高的z-index确保整个区域在顶层 */
+}
+.industry-item {
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+    flex-wrap: nowrap;
+    height: auto;
+    cursor: pointer; /* 添加鼠标指针样式 */
+    position: relative;
+    z-index: 10; /* 提高z-index确保能接收点击 */
+}
+.industry-item img{
+    width: 15px;
+    height: 15px;
+    margin-right: 0.1rem;
+}
+.industry-item label, .industry-item--label {
+    font-size: 0.2rem;
+    color: #b8c9d6;
+    font-weight: 500;
+    width: 100px;
+    transition: color 0.3s ease;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.progress-container{
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+/* 自定义进度条样式 */
+.industry-item--el-progress {
+    width: 80px; /* 减小宽度 */
+    margin-left: 15px; /* 减小左边距 */
+    height: 12px; /* 减小高度 */
+    background-color: rgba(47, 137, 207, 0.2);
+    border-radius: 6px; /* 调整圆角 */
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    --progress-width: 0%; /* 默认进度宽度 */
+}
+
+.industry-item--el-progress::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: var(--progress-width); /* 使用CSS变量设置宽度 */
+    background: linear-gradient(90deg, #2f89cf, #4bb3fd);
+    border-radius: 6px; /* 与容器保持一致的圆角 */
+    transition: width 0.6s ease;
+    z-index: 2; /* 确保在背景之上 */
+}
+
+.progress-percentage {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 10px; /* 减小字体大小 */
+    font-weight: 600;
+    z-index: 3; /* 提高z-index确保在进度条上方显示 */
+    white-space: nowrap;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.8); /* 添加文字阴影提高可读性 */
+}
+
+/* 高亮选中状态 */
+.industry-item.active label, .industry-item.active .industry-item--label {
+    color: #4bb3fd;
+    font-weight: 600;
+}
+
+.industry-item:hover label, .industry-item:hover .industry-item--label {
+    color: #fff;
+}
+
+.industry-item .el-progress-bar__inner {
+    border-radius: 4px;
+    background-color: #38a6df;
+    height: 100%; /* 确保填充整个进度条高度 */
+}
+
+.industry-item .el-progress__text {
+    color: #b8c9d6 !important; /* 改色，添加!important确保生效 */
+    font-size: 10px !important; /* 字体更小，添加!important确保生效 */
+    font-weight: 400 !important; /* 添加!important确保生效 */
+    line-height: normal; /* 正常行高 */
+    margin-left: 10px; /* 与进度条保持适当距离 */
+}
+.jump-button{
+    margin-top: 0.7rem;
+}
+
+/* column2:综合得分 */
+.index-center-panel img{
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 90%;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: brightness(1.1);
+    z-index: 1; /* 设置低z-index，确保不阻止点击事件 */
+}
+.total-score{
+    position: absolute;
+    top: 730px;
+    left: 710px;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 90%;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: brightness(1.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+    pointer-events: none; /* 确保文字不阻止点击事件 */
+}
+.total-score div:first-child{
+    font-size: 50px;
+    color: #fff;
+    font-weight: 600;
+    z-index: 10;
+}
+.total-score div:last-child{
+    font-size: 18px;
+    color: #fff;
+    font-weight: 500;
+    z-index: 10;
+}
+.index-score-1{
+    position: absolute;
+    top: 370px;
+    left: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.index-score-1 div:first-child{
+    font-size: 18px;
+    color: #fff;
+    z-index: 10;
+}
+.index-score-1 div:last-child{
+    font-size: 30px;
+    color: #fff;
+    z-index: 10;
+}
+.index-score-2{
+    position: absolute;
+    top: 250px;
+    left: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.index-score-2 div:first-child{
+    font-size: 18px;
+    color: #fff;
+    z-index: 10;
+}
+.index-score-2 div:last-child{
+    font-size: 30px;
+    color: #fff;
+    z-index: 10;
+}
+.index-score-3{
+    position: absolute;
+    top: 540px;
+    left: 780px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.index-score-3 div:first-child{
+    font-size: 18px;
+    color: #fff;
+    z-index: 10;
+}
+.index-score-3 div:last-child{
+    font-size: 30px;
+    color: #fff;
+    z-index: 10;
+}
+
+/* 一级指标点击高亮功能 */
+.index-score-1, .index-score-2, .index-score-3 {
+    cursor: pointer; /* 鼠标指针改为手型 */
+}
+
+/* 选中高亮效果 - 只保留最基本的功能 */
+.index-score-1.active, .index-score-2.active, .index-score-3.active {
+    background-color: rgba(196, 113, 53, 0.1); 
+    border-radius: 8px;
+    
+}
+
+.index-score-1.active div, .index-score-2.active div, .index-score-3.active div {
+    color: #f2bf51; /* 选中时文字颜色变化 */
+}
+
+
+/* column3：知识创新产出 */
+.index-score{
+    margin-bottom: 10px;
+    height: 240px;
+    min-height: 230px;
+}
+
+/* 为知识创新影响部分设置特定高度 */
+.index-score-impact {
+    height: 200px;
+    min-height: 200px;
+}
+.index-score h2{
+    font-size: 0.25rem;
+    color: #fff;
+    font-weight: 400;
+    letter-spacing: 0.03rem;
+    display: block;/*使用此效果移动位置*/
+    position: relative;
+    margin-top: -0.4rem;
+    text-align: center;
+}
+.index-score-item img{
+    margin: 50px;
+    width: 280px;
+    height: 150px;
+}
+.produce-content-1{
+    margin-top: -160px;
+    margin-left: 10px;
+    color: #ffffffee;
+    font-size: 10px;
+}
+.produce-content-2{
+    margin-top: -70px;
+    margin-left: 260px;
+    color: #fff;
+    font-size: 10px;
+}
+.produce-content-3{
+    margin-top: 90px;
+    margin-left: 150px;
+    color: #fff;
+    font-size: 10px;
+}
+.produce-content-4{
+    margin-top: -70px;
+    margin-left: 280px;
+    color: #fff;
+    font-size: 10px;
+}
+/* 调整impact-content区域为四宫格布局 */
+.impact-content {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 40px;
+    margin-left: 10px;
+}
+
+.impact-content-1, .impact-content-2, .impact-content-3, .impact-content-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    color: #ffffffee;
+    font-size: 10px;
+    margin-bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+.impact-content-1 img, .impact-content-2 img, .impact-content-3 img, .impact-content-4 img {
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+    width: 50px !important;
+    height: 50px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.impact-content-1 .text-container, .impact-content-2 .text-container, .impact-content-3 .text-container, .impact-content-4 .text-container {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    vertical-align: middle !important;
+}
+
+/* 调整diffusion-content区域为一行三列布局 */
+.diffusion-content {
+    margin-top: 30px;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-rows: 1fr !important;
+    gap: 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+.diffusion-content-1, .diffusion-content-2, .diffusion-content-3 {
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    color: #ffffffee;
+    font-size: 10px;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100px;
+}
+
+.diffusion-content-1 img, .diffusion-content-2 img, .diffusion-content-3 img {
+    flex-shrink: 0 !important;
+    width: 120px !important;
+    height: 120px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.diffusion-content-1 .text-container, .diffusion-content-2 .text-container, .diffusion-content-3 .text-container {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #fff !important;
+    z-index: 10 !important;
+}
+
+/* 返回按钮 */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+    padding: 10px;
+    background: rgba(47, 137, 207, 0.2);
+    border: 1px solid rgba(47, 137, 207, 0.4);
+    border-radius: 6px;
+    color: #2f89cf;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background: rgba(47, 137, 207, 0.4);
+    border-color: rgba(47, 137, 207, 0.6);
+    color: #fff;
+    transform: translateX(-2px);
+}
+
+@media (max-width: 768px) {
+    .info-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .index-value {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-item span {
+        font-size: 16px;
+    }
+}

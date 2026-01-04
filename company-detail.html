@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="description" content="企业创新指数详情页面，展示企业创新数据的详细信息">
+    <meta name="keywords" content="企业创新,数据可视化,企业详情">
+    <meta name="theme-color" content="#2f89cf">
+    <meta name="author" content="数据可视化团队">
+    <title>全球企业创新指数</title>
+    <!-- 图标 -->
+    <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+    <link rel="apple-touch-icon" href="images/logo.svg">
+    <!-- CSS文件 -->
+    <link rel="preload" href="css/index.css?v=1.0" as="style">
+    <link rel="stylesheet" href="css/index.css?v=1.0">
+    <link rel="preload" href="css/company-detail.css?v=1.1" as="style">
+    <link rel="stylesheet" href="css/company-detail.css?v=1.1">
+    <!-- Element UI样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 预加载关键字体 -->
+    <!-- <link rel="preload" href="font/DS-DIGIT.TTF" as="font" crossorigin> -->
+</head>
+<body>
+    <!-- 头部的盒子 -->
+    <header class="header">
+        <h1>全球企业创新指数(GEII)展示大屏</h1>
+        <div class="control-panel">
+            <div class="year-selector">
+                <label for="yearSelect">数据日期：</label>
+                <select id="yearSelect" class="year-select" aria-label="选择数据年份">
+                    <option value="2024">2024</option>
+                    <option value="2025" selected>2025</option>
+                </select>
+            </div>
+        </div>
+        <div class="showTime" aria-live="polite" role="status" id="currentTime"></div>
+        <script>
+            // 禁止缩放功能
+            (function() {
+              // 阻止触摸缩放
+              document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              });
+              
+              let lastTouchEnd = 0;
+              document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                  e.preventDefault();
+                }
+                lastTouchEnd = now;
+              }, false);
+              
+              // 阻止触摸移动缩放
+              document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              }, { passive: false });
+              
+              // 阻止键盘缩放
+              document.addEventListener('keydown', function(e) {
+                // 阻止Ctrl+和Ctrl-
+                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.keyCode === 187 || e.keyCode === 189)) {
+                  e.preventDefault();
+                }
+                // 阻止Ctrl+鼠标滚轮
+                if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-')) {
+                  e.preventDefault();
+                }
+              });
+              
+              // 阻止鼠标滚轮缩放
+              document.addEventListener('wheel', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                  e.preventDefault();
+                }
+              }, { passive: false });
+            })();
+            
+            // 时间显示优化版
+            function formatNumber(num) {
+            return num.toString().padStart(2, '0');
+            }
+
+            function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = formatNumber(now.getMonth() + 1);
+            const day = formatNumber(now.getDate());
+            const hours = formatNumber(now.getHours());
+            const minutes = formatNumber(now.getMinutes());
+            const seconds = formatNumber(now.getSeconds());
+            
+            document.querySelector(".showTime").innerHTML = 
+                `当前时间：${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
+            }
+
+            // 立即执行一次，避免页面加载后延迟显示
+            updateTime();
+            
+            // 每秒更新一次
+            const timeInterval = setInterval(updateTime, 1000);
+        </script>
+    </header>
+
+    <!-- 页面主体部分 -->
+    <main class="mainbox">
+        <div class="detail-container-column">
+            <!-- 企业基本信息 -->
+            <section class="company-info-panel">
+                <div class="info-content">
+                    <div class="info-item">
+                        <img id="companyLogo" src="images/com-detail-img/company-logo.svg">
+                        <span id="companyName" class="company-name"></span>
+                        <label>/</label>
+                        <span id="companyCountry"></span>
+                    </div>
+                    <div class="info-rank">
+                        <label>全球排名：</label>
+                        <span id="companyRank"></span>
+                    </div>
+                </div>
+                <img class="table-line" src="images/tableLine-Strong.png">
+                <div class="paper-item">
+                    <div class="paper-item-content">
+                        <img src="images/com-detail-img/diffusion-item2-green.png" style="width: 10px;height: 10px;">
+                        <label>论文数量</label>
+                        <span id="companyPaperCount"></span>
+                        <label>篇</label>
+                    </div>
+                    <div class="paper-item-content">
+                        <img src="images/com-detail-img/diffusion-item5-yellow.png" style="width: 10px;height: 10px;">
+                        <label>专利数量</label>
+                        <span id="companyPatentCount"></span>
+                        <label>件</label>
+                    </div>
+                </div>
+                <div class="industry-select" id="industryApp">
+                    <img src="images/subtitle.png" style="width: 100%;height: 100%">
+                    <h2>各领域创新指数得分</h2>
+                    <div class="industry-score">
+                        <div class="industry-item" data-industry="新能源">
+                            <img src="images/com-detail-img/energy-icon.svg">
+                            <label class="industry-item--label">新能源</label>
+                            <div class="progress-container">
+                                <div class="industry-item--el-progress" data-value="87">
+                                    <span class="progress-percentage">87</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="industry-item" data-industry="新材料">
+                            <img src="images/com-detail-img/energy-icon.svg">
+                            <label class="industry-item--label">新材料</label>
+                            <div class="progress-container">
+                                <div class="industry-item--el-progress" data-value="87.5">
+                                    <span class="progress-percentage">87.5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="industry-item" data-industry="生物">
+                            <img src="images/com-detail-img/energy-icon.svg">
+                            <label class="industry-item--label">生物医药</label>
+                            <div class="progress-container">
+                                <div class="industry-item--el-progress" data-value="90">
+                                    <span class="progress-percentage">90</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="industry-item" data-industry="高端装备制造">
+                            <img src="images/com-detail-img/energy-icon.svg">
+                            <label class="industry-item--label">先进制造</label>
+                            <div class="progress-container">
+                                <div class="industry-item--el-progress" data-value="74">
+                                    <span class="progress-percentage">74</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="industry-item" data-industry="新一代信息技术">
+                            <img src="images/com-detail-img/energy-icon.svg">
+                            <label class="industry-item--label">新一代信息技术</label>
+                            <div class="progress-container">
+                                <div class="industry-item--el-progress" data-value="30">
+                                    <span class="progress-percentage">30</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="industry-item" data-industry="新能源汽车">
+                            <img src="images/com-detail-img/energy-icon.svg">
+                            <label class="industry-item--label">新能源汽车</label>
+                            <div class="progress-container">
+                                <div class="industry-item--el-progress" data-value="87">
+                                    <span class="progress-percentage">87</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="jump-button">
+                    <!-- 返回按钮 -->
+                    <a href="index.html" class="back-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        返回首页
+                    </a>
+                </div>
+            </section>
+        </div>
+        <div class="detail-container-column">
+             <!-- 创新指数详情 -->
+            <section class="index-center-panel">
+                <img src="images/detail-center.png" alt="创新指数详情">
+                <div class="total-score">
+                    <div>87.5</div>
+                    <div>创新指数</div>
+                </div>
+                <div class="index-score-1">
+                    <div>知识创新</div>
+                    <div>87.5</div>
+                </div>
+                <div class="index-score-2">
+                    <div>技术创新</div>
+                    <div>87.5</div>
+                </div>
+                <div class="index-score-3">
+                    <div>创新协作</div>
+                    <div>87.5</div>
+                </div>
+            </section>
+        </div>
+        <div class="detail-container-column">
+            <!-- 详细图表展示 -->
+            <section class="company-score-panel">
+                <div class="index-score">
+                    <img src="images/subtitle.png">
+                    <h2>知识创新产出</h2>
+                    <div class="index-score-item">
+                        <img src="images/com-detail-img/knowledge-produce-origin.png">
+                    </div>
+                    <div class="produce-content-1">
+                        <div class="name">Web Of Science论文数</div>
+                        <div class="value" style="font-size: 18px;">750.8</div>
+                    </div>
+                    <div class="produce-content-2">
+                        <div class="name">被引排名前10%论文数</div>
+                        <div class="value" style="font-size: 18px;">750.8</div>
+                    </div>
+                    <div class="produce-content-3">
+                        <div class="name">第一/通讯作者论文数</div>
+                        <div class="value" style="font-size: 18px;">259.4</div>
+                    </div>
+                    <div class="produce-content-4" style="display: none;">
+                        <div class="name"></div>
+                        <div class="value" style="font-size: 18px;"></div>
+                    </div>
+                </div>
+                <div class="index-score index-score-impact">
+                    <img src="images/subtitle.png">
+                    <h2>知识创新影响</h2>
+                    <div class="impact-content">
+                        <div class="impact-content-1">
+                            <img src="images/com-detail-img/tech-impact.png">
+                            <div class="text-container">
+                                <div>篇均论文被引频次</div>
+                                <div style="font-size: 18px;">19.06</div>
+                            </div>
+                        </div>
+                        <div class="impact-content-2">
+                            <img src="images/com-detail-img/tech-impact.png">
+                            <div class="text-container">
+                                <div>学科规范化的引文影响力</div>
+                                <div style="font-size: 18px;">1.26</div>
+                            </div>
+                        </div>
+                        <div class="impact-content-3">
+                            <img src="images/com-detail-img/tech-impact.png">
+                            <div class="text-container">
+                                <div>论文施引国家数</div>
+                                <div style="font-size: 18px;">61.30</div>
+                            </div>
+                        </div>
+                        <div class="impact-content-4">
+                            <img src="images/com-detail-img/tech-impact.png" style="width: 50px;height: 50px">
+                            <div class="text-container">
+                                <div>论文施引国家多样性</div>
+                                <div style="font-size: 18px;">2.71</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="index-score">
+                    <img src="images/subtitle.png">
+                    <h2>知识创新扩散</h2>
+                    <div class="diffusion-content">
+                        <div class="diffusion-content-1">
+                            <img src="images/com-detail-img/diffusion-item2-green.png" style="width: 100px;height: 100px">
+                            <div class="text-container">
+                                <div style="font-size: 20px;">123</div>
+                                <div>专利引用频次</div>
+                            </div>
+                        </div>
+                        <div class="diffusion-content-2"> 
+                            <img src="images/com-detail-img/diffusion-item2-green.png" style="width: 100px;height: 100px">
+                            <div class="text-container">
+                                <div style="font-size: 20px;">123</div>
+                                <div>媒体关注频次</div>
+                            </div>
+                        </div>
+                        <div class="diffusion-content-3"> 
+                            <img src="images/com-detail-img/diffusion-item2-green.png" style="width: 100px;height: 100px">
+                            <div class="text-container">
+                                <div style="font-size: 20px;">123</div>
+                                <div>政策引用频次</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 加载状态指示器 -->
+    <div id="globalLoader" class="global-loader" style="display: none;">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">数据加载中...</div>
+    </div>
+    
+    <!-- 错误通知 -->
+    <div id="errorNotice" class="error-notice" style="display: none;">
+        <div class="error-message">数据加载失败，请刷新页面重试</div>
+    </div>
+
+    <!-- 基础库 -->
+    <script src="js/flexible.js" defer></script>
+    <script src="js/jquery.js" defer></script>
+    <!-- Vue.js 2.x -->
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <!-- Element UI -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    
+    <!-- 核心库和工具 -->
+    <script src="js/echarts.min.js" defer></script>
+    <script src="js/data-utils.js" defer></script>
+    
+    <!-- 功能模块 -->
+    <script src="js/data-loader.js" defer></script>
+    <script src="js/industry-manager.js" defer></script>
+    <script src="js/chart-manager.js" defer></script>
+    
+    <!-- 产业模块初始化 -->
+    <script>
+        // 页面加载完成后初始化产业数据模块
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取yearSelect元素
+            const yearSelect = document.getElementById('yearSelect');
+            
+            // 初始化产业数据，使用yearSelect的当前值
+            industryManager.initIndustryScoreModule();
+            
+            // 为yearSelect添加change事件监听
+            yearSelect.addEventListener('change', function() {
+                const selectedYear = this.value; // 保持字符串格式，与industryManager保持一致
+                industryManager.switchYear(selectedYear);
+            });
+        });
+        
+        // 修改CSS类名兼容性处理
+        window.addEventListener('load', function() {
+            // 等待industryManager初始化完成后，设置正确的active类名样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .industry-item.active {
+                    background-color: rgba(47, 137, 207, 0.2);
+                    border-color: #2f89cf;
+                    color: #2f89cf;
+                    border-radius: 6px;
+                    width:300px;
+                    padding-bottom: 8px;
+                }
+                
+                /* 一级指标点击样式 */
+                .index-score-1, .index-score-2, .index-score-3 {
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .index-score-1:hover, .index-score-2:hover, .index-score-3:hover {
+                    background-color: rgba(47, 137, 207, 0.05);
+                }
+                
+                .index-score-1.active, .index-score-2.active, .index-score-3.active {
+                    background-color: rgba(47, 137, 207, 0.1);
+                    border-color: #2f89cf;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+    
+    <!-- 页面逻辑 -->
+    <script src="js/company-detail.js" defer></script>
+    
+    <!-- Vue实例初始化 -->
+    <script>
+        new Vue({
+            el: '#industryApp',
+            data() {
+                return {
+                    // 可以在这里定义需要的数据
+                }
+            }
+        })
+    </script>
+</body>
+</html>
