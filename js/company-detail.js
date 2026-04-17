@@ -1004,10 +1004,177 @@ async function initIndicatorClickEvents() {
         // 显示企业信息
         displayCompanyInfo();
         
+        // 初始化企业比较功能
+        initCompanyCompare();
         
         // 默认选中知识创新指标
         updateRightPanelTitles('knowledge');
         
+    }
+    
+    /**
+     * 初始化企业比较功能
+     */
+    function initCompanyCompare() {
+        const compareBtn = document.getElementById('compareBtn');
+        const modal = document.getElementById('companySelectModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const companySearch = document.getElementById('companySearch');
+        const alphabetIndex = document.getElementById('alphabetIndex');
+        const companyList = document.getElementById('companyList');
+        
+        let allCompanies = [];
+        let filteredCompanies = [];
+        let selectedCompany = null;
+        let currentLetter = 'ALL';
+        
+        // 加载企业数据
+        window.dataLoader.loadJSON('json/enterprise_total.json').then(data => {
+            // 去重并按名称排序
+            allCompanies = [...new Set(data.enterprises)].sort((a, b) => {
+                return a.localeCompare(b);
+            });
+            filteredCompanies = [...allCompanies];
+            
+            // 渲染企业列表
+            renderCompanyList();
+        }).catch(error => {
+            console.error('加载企业数据失败:', error);
+        });
+        
+        // 筛选企业
+        function filterCompanies() {
+            const searchText = companySearch.value.toLowerCase();
+            
+            filteredCompanies = allCompanies.filter(company => {
+                // 按搜索文本筛选
+                if (searchText) {
+                    return company.toLowerCase().includes(searchText);
+                }
+                return true;
+            });
+            
+            renderCompanyList();
+        }
+        
+        // 渲染企业列表
+        function renderCompanyList() {
+            companyList.innerHTML = '';
+            
+            filteredCompanies.forEach(company => {
+                const item = document.createElement('div');
+                item.className = 'company-item';
+                item.textContent = company;
+                item.dataset.company = company;
+                
+                item.addEventListener('click', () => {
+                    // 移除其他选中项
+                    companyList.querySelectorAll('.company-item').forEach(i => {
+                        i.classList.remove('selected');
+                    });
+                    
+                    // 添加选中状态
+                    item.classList.add('selected');
+                    selectedCompany = company;
+                    confirmBtn.disabled = false;
+                });
+                
+                companyList.appendChild(item);
+            });
+        }
+        
+        // 打开弹窗
+        compareBtn.addEventListener('click', () => {
+            // 重置状态
+            selectedCompany = null;
+            confirmBtn.disabled = true;
+            companySearch.value = '';
+            filterCompanies();
+            // 显示弹窗
+            modal.style.display = 'flex';
+        });
+        
+        // 关闭弹窗
+        function closeModal() {
+            modal.style.display = 'none';
+            // 重置状态
+            selectedCompany = null;
+            confirmBtn.disabled = true;
+            companySearch.value = '';
+            filterCompanies();
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // 点击弹窗外部关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // 搜索框事件
+        companySearch.addEventListener('input', filterCompanies);
+        
+        // 检查企业在当前年份是否有数据
+        async function checkCompanyData(companyName, year) {
+            try {
+                // 加载创新指标数据
+                const indicatorData = await window.dataLoader.loadJSON('json/global_enterprise_index.json');
+                
+                // 获取指定年份的数据
+                const yearData = indicatorData[year];
+                if (!yearData) {
+                    return false;
+                }
+                
+                // 遍历所有产业查找企业
+                for (const industry in yearData) {
+                    const industryData = yearData[industry];
+                    if (industryData && Array.isArray(industryData)) {
+                        const companyInfo = industryData.find(item => 
+                            item['企业中文简称'] === companyName || 
+                            item['企业名称'] === companyName
+                        );
+                        if (companyInfo) {
+                            return true;
+                        }
+                    }
+                }
+                
+                return false;
+            } catch (error) {
+                console.error('检查企业数据失败:', error);
+                return false;
+            }
+        }
+        
+        // 确定按钮事件
+        confirmBtn.addEventListener('click', async () => {
+            if (selectedCompany) {
+                // 检查是否选择了同一个企业
+                if (selectedCompany === currentParams.company) {
+                    alert('不能选择同一个企业');
+                    return;
+                }
+                
+                // 检查选中的企业在当前年份是否有数据
+                const hasData = await checkCompanyData(selectedCompany, currentParams.year);
+                if (!hasData) {
+                    alert('该企业当前年度无数据，请重新选择。');
+                    return;
+                }
+                
+                // 构造跳转URL
+                const url = `company-compare.html?year=${currentParams.year}&industry=${encodeURIComponent(currentParams.industry)}&company1=${encodeURIComponent(currentParams.company)}&company2=${encodeURIComponent(selectedCompany)}`;
+                window.open(url,'_blank');
+                // 关闭弹窗
+                closeModal();
+            }
+        });
     }
 
     // 页面加载完成后初始化

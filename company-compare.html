@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="description" content="企业创新指数对比页面，展示两个企业创新数据的详细信息">
+    <meta name="keywords" content="企业创新,数据可视化,企业对比">
+    <meta name="theme-color" content="#2f89cf">
+    <meta name="author" content="数据可视化团队">
+    <title>企业创新指数对比</title>
+    <!-- 图标 -->
+    <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+    <link rel="apple-touch-icon" href="images/logo.svg">
+    <!-- CSS文件 -->
+    <link rel="preload" href="css/index.css?v=1.0" as="style">
+    <link rel="stylesheet" href="css/index.css?v=1.0">
+    <link rel="preload" href="css/company-detail.css?v=1.1" as="style">
+    <link rel="stylesheet" href="css/company-detail.css?v=1.1">
+
+    <!-- 预加载关键字体 -->
+    <link rel="preload" href="font/DS-DIGIT.TTF" as="font" crossorigin>
+    <!-- 企业对比页面样式 -->
+    <link rel="preload" href="css/country-detail.css?v=1.0" as="style">
+    <link rel="stylesheet" href="css/country-detail.css?v=1.0">
+    <link rel="preload" href="css/company-compare.css?v=1.0" as="style">
+    <link rel="stylesheet" href="css/company-compare.css?v=1.0">
+</head>
+<body>
+    <!-- 头部的盒子 -->
+    <header class="header">
+        <div class="back-home">
+            <a href="index.html" class="back-home-btn">返回首页</a>
+        </div>
+        <h1>全球企业创新指数(GEII)展示大屏</h1>
+        <div class="control-panel">
+            <div class="year-selector">
+                <label for="yearSelect">数据日期：</label>
+                <select id="yearSelect" class="year-select" aria-label="选择数据年份">
+                    <option value="2024">2024</option>
+                    <option value="2025" selected>2025</option>
+                </select>
+            </div>
+        </div>
+        <div class="showTime" aria-live="polite" role="status" id="currentTime"></div>
+        <script>
+            // 禁止缩放功能
+            (function() {
+              // 阻止触摸缩放
+              document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              });
+              
+              let lastTouchEnd = 0;
+              document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                  e.preventDefault();
+                }
+                lastTouchEnd = now;
+              }, false);
+              
+              // 阻止触摸移动缩放
+              document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              }, { passive: false });
+              
+              // 阻止键盘缩放
+              document.addEventListener('keydown', function(e) {
+                // 阻止Ctrl+和Ctrl-
+                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.keyCode === 187 || e.keyCode === 189)) {
+                  e.preventDefault();
+                }
+                // 阻止Ctrl+鼠标滚轮
+                if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '-')) {
+                  e.preventDefault();
+                }
+              });
+              
+              // 阻止鼠标滚轮缩放
+            //   document.addEventListener('wheel', function(e) {
+            //     if (e.ctrlKey || e.metaKey) {
+            //       e.preventDefault();
+            //     }
+            //   }, { passive: false });
+            })();
+            
+            // 时间显示优化版
+            function formatNumber(num) {
+            return num.toString().padStart(2, '0');
+            }
+
+            function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = formatNumber(now.getMonth() + 1);
+            const day = formatNumber(now.getDate());
+            const hours = formatNumber(now.getHours());
+            const minutes = formatNumber(now.getMinutes());
+            const seconds = formatNumber(now.getSeconds());
+            
+            document.querySelector(".showTime").innerHTML = 
+                `当前时间：${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
+            }
+
+            // 立即执行一次，避免页面加载后延迟显示
+            updateTime();
+            
+            // 每秒更新一次
+            const timeInterval = setInterval(updateTime, 1000);
+        </script>
+    </header>
+
+    <!-- 页面主体部分 -->
+    <main class="mainbox">
+        <div class="detail-container-column">
+            <!-- 企业对比信息 -->
+            <section class="company-comparison-panel">
+                <div class="company-info">
+                    <div class="company-item">
+                        <div class="company-details-left">
+                            <h3 class="company-name" id="company1Name">企业1</h3>
+                            <span class="company-country" id="company1Country">国家1</span>
+                            <button class="switch-company-btn" id="switchCompany1Btn">切换</button>
+                        </div>
+                    </div>
+                    <div class="vs-symbol">VS</div>
+                    <div class="company-item">
+                        <div class="company-details-right">
+                            <h3 class="company-name" id="company2Name">企业2</h3>
+                            <button class="switch-company-btn" id="switchCompany2Btn">切换</button>
+                            <span class="company-country" id="company2Country">国家2</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 企业统计数据 -->
+                <!-- <div class="company-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">专利数量</div>
+                        <div class="stat-value" id="company1Patents">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">论文数量</div>
+                        <div class="stat-value" id="company1Papers">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">专利数量</div>
+                        <div class="stat-value" id="company2Patents">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">论文数量</div>
+                        <div class="stat-value" id="company2Papers">0</div>
+                    </div>
+                </div> -->
+                
+                <!-- 产业数据图表 -->
+                <div class="country-freq-and-industry">
+                    <div class="country-freq">
+                        <!-- 左侧企业 -->
+                        <div class="country-freq-item">
+                            <!-- <div class="freq-and-select-container">
+                                <span class="freq-total">企业数据</span>
+                            </div> -->
+                            <!-- 左侧企业图表 -->
+                            <div id="industryRankChart1" class="chart-container"></div>
+                        </div>
+                        
+                        <!-- 产业按钮 -->
+                        <div id="industryButtons" class="industry-buttons"></div>
+                        
+                        <!-- 右侧企业 -->
+                        <div class="country-freq-item">
+                            <!-- <div class="freq-and-select-container">
+                                <span class="freq-total">企业数据</span>
+                            </div> -->
+                            <!-- 右侧企业图表 -->
+                            <div id="industryRankChart2" class="chart-container"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 三级指标表格 -->
+                <div class="enterprise-data">
+                    <!-- 标题图片 -->
+                    <div class="table-title-container">
+                        <img src="images/subtitle.png" alt="subtitle" class="subtitle-img">
+                        <h3 class="table-title-text">企业创新指数详细指标</h3>
+                    </div>
+                    
+                    <!-- 一级指标选择器 -->
+                    <div class="metric-selector">
+                        <button class="metric-btn active" data-metric="知识创新">知识创新</button>
+                        <button class="metric-btn" data-metric="技术创新">技术创新</button>
+                        <button class="metric-btn" data-metric="创新协作">创新协作</button>
+                    </div>
+                    
+                    <div class="country-freq">
+                        <!-- 左侧企业表格 -->
+                        <div class="table-container">
+                            <table id="company1MetricTable" class="enterprise-table">
+                                <thead>
+                                    <tr>
+                                        <th>指标名称</th>
+                                        <th>数值</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- 右侧企业表格 -->
+                        <div class="table-container">
+                            <table id="company2MetricTable" class="enterprise-table">
+                                <thead>
+                                    <tr>
+                                        <th>指标名称</th>
+                                        <th>数值</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页面底部 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>全球企业创新指数(GEII)展示大屏 &copy; 2025 数据可视化团队</p>
+        </div>
+    </footer>
+
+    <!-- 企业选择弹窗 -->
+    <div id="companyModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择企业</h3>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-container">
+                    <input type="text" id="companySearch" placeholder="搜索企业..." class="company-search">
+                </div>
+                <div id="companyList" class="company-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelBtn" class="btn cancel-btn">取消</button>
+                <button id="confirmBtn" class="btn confirm-btn" disabled>确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/jquery.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/flexible.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/data-utils.js"></script>
+    
+    <!-- 企业对比页面JavaScript -->
+    <script src="js/company-compare.js"></script>
+    
+    <!-- 禁止缩放功能 -->
+    <script>
+        // 禁止双击缩放
+        document.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+        });
+        
+        // 禁止鼠标滚轮缩放
+        document.addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        });
+        
+        // 禁止键盘缩放
+        document.addEventListener('keydown', function(e) {
+            // 禁止Ctrl+或Ctrl-缩放
+            if ((e.ctrlKey && (e.key === '+' || e.key === '-')) || 
+                // 禁止Ctrl+鼠标滚轮缩放
+                (e.ctrlKey && e.key === '0')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

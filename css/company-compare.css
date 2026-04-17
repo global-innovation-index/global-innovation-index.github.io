@@ -1,0 +1,554 @@
+/* 企业对比页面样式 */
+
+/* 头部返回首页按钮 */
+.header {
+    position: relative;
+    padding-left: 120px; /* 为返回按钮留出空间 */
+}
+
+.back-home {
+    position: absolute;
+    left: 0.5rem;
+    top: 35%;
+    transform: translateY(-50%);
+}
+
+.back-home-btn {
+    display: inline-block;
+    padding: 0.1rem 0.15rem;
+    background: rgba(26, 46, 79, 0.7);
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border: 0.001rem solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.05rem;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-home-btn:hover {
+    background: rgba(26, 46, 79, 0.9);
+    color: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 8px rgba(47, 138, 207, 0.3);
+}
+
+/* 主面板样式 */
+.company-comparison-panel {
+    padding: 5px 20px;
+}
+
+/* 企业信息区域 */
+.company-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 5px;
+    background: rgba(47,138,207,0.072);
+    border-radius: 8px;
+}
+
+.company-item {
+    display: flex;
+    align-items: center;
+    cursor: default;
+    width: 400px;
+}
+
+/* 取消company-item的hover效果 */
+.company-item:hover {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: #fff !important;
+}
+
+.company-details-left, .company-details-right {
+    padding: 0 80px;
+    flex: 1;
+    min-width: 0;
+}
+
+.company-details-right {
+    text-align: right;
+}
+
+.company-name {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(100, 200, 255, 0.7);
+    letter-spacing: 2px;
+}
+
+.company-country {
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.vs-symbol {
+    font-size: 50px;
+    font-weight: bold;
+    color: #00e5ff;
+    text-shadow: 0 0 15px rgba(100, 200, 255, 0.6);
+}
+
+/* 企业统计数据 */
+.company-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin: 0 10px;
+}
+
+.stat-label {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* 产业按钮容器 */
+.industry-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 2px;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    font-size: 12px;
+    width: 130px; /* 设置固定宽度，确保两侧图表容器宽度一致 */
+    flex-shrink: 0; /* 防止按钮容器被压缩 */
+}
+
+/* 产业按钮样式 */
+.industry-btn {
+    background: rgba(47, 138, 207, 0.3);
+    border: 1px solid rgba(47, 138, 207, 0.5);
+    border-radius: 5px;
+    color: #fff;
+    padding: 3px 5px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    min-width: 110px;
+}
+
+.industry-btn:hover {
+    background: rgba(47, 138, 207, 0.5);
+    border-color: rgba(47, 138, 207, 0.8);
+}
+
+.industry-btn.active {
+    background: rgba(76, 175, 80, 0.6);
+    border-color: rgba(76, 175, 80, 0.8);
+}
+
+/* 企业数据表格 */
+.enterprise-data {
+    margin-top: 2px;
+}
+
+.table-title-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+.subtitle-img {
+    width: 400px;
+    height: 40px;
+}
+
+.table-title-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.table-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0px 0px 5px 0px;
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: rgba(47, 138, 207, 0.5);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(47, 138, 207, 0.8);
+}
+
+.enterprise-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+}
+
+.enterprise-table th,
+.enterprise-table td {
+    padding: 7px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.enterprise-table th {
+    background: rgba(47, 137, 207, 0.3);
+    font-weight: bold;
+    padding: 9px;
+}
+
+.enterprise-table tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 指标选择器 */
+.metric-selector {
+    margin: 8px 0;
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.metric-selector label {
+    color: #fff;
+    margin-right: 10px;
+}
+
+.metric-select {
+    padding: 8px 16px;
+    border: 1px solid #2f89cf;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* 指标按钮样式 */
+.metric-btn {
+    flex: 1;
+    padding: 5px 20px;
+    border: 1px solid rgba(47, 138, 207, 0.5);
+    border-radius: 4px;
+    background: rgba(47, 137, 207, 0.2);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.metric-btn:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.metric-btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.metric-btn:hover {
+    background: rgba(47, 138, 207, 0.5);
+    box-shadow: 0 0 5px rgba(47, 138, 207, 0.7);
+}
+
+.metric-btn.active {
+    color: #fff;
+    position: relative;
+}
+
+.metric-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 200, 255, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 200, 255, 0.6);
+    border-radius: 0 0 4px 4px;
+}
+
+/* 图表容器 */
+.chart-container {
+    height: 400px;
+    margin: 5px 0 15px 0;
+}
+
+/* 切换企业按钮 */
+.switch-company-btn {
+    padding: 1px 6px;
+    border: 1px solid #2f89cf;
+    border-radius: 4px;
+    background: rgba(47, 137, 207, 0.2);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+}
+
+.switch-company-btn:hover {
+    background: rgba(47, 137, 207, 0.5);
+}
+
+/* 调整企业对比页面的图表容器内边距 */
+.country-freq-item {
+    padding: 10px 10px 0px 10px !important;
+}
+
+/* 弹窗样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    height: 60%;
+}
+
+.modal-header {
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 16px;
+}
+
+/* 关闭按钮样式 */
+.close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 16px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.search-container {
+    margin-bottom: 16px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    font-size: 12px;
+    box-sizing: border-box;
+    color: #333;
+}
+
+.company-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.company-item {
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.modal-company-item {
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-company-item:hover {
+    background-color: #e6f7ff;
+    color: #2f89cf;
+}
+
+.modal-company-item.selected {
+    background-color: #2f89cf;
+    color: white;
+}
+
+.modal-footer {
+    padding: 16px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancel-btn, .confirm-btn {
+    padding: 8px 16px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background-color: #f5f7fa;
+    color: #000000;
+}
+
+.cancel-btn:hover {
+    background-color: #e4e7ed;
+    border-color: #c0c4cc;
+}
+
+.confirm-btn {
+    background-color: #2f89cf;
+    color: white;
+    border-color: #2f89cf;
+}
+
+.confirm-btn:hover {
+    background-color: #409eff;
+    border-color: #409eff;
+}
+
+.confirm-btn:disabled {
+    background-color: #c0c4cc;
+    border-color: #c0c4cc;
+    cursor: not-allowed;
+}
+
+.company-search {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #2f89cf;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 14px;
+}
+
+.company-search::placeholder {
+    color: #8a9ba8;
+}
+
+.company-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.company-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.company-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.company-list::-webkit-scrollbar-thumb {
+    background: rgba(47, 138, 207, 0.5);
+    border-radius: 4px;
+}
+
+.company-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(47, 138, 207, 0.8);
+}
+
+
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .company-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .vs-symbol {
+        margin: 20px 0;
+    }
+    
+    .company-stats {
+        flex-direction: column;
+    }
+    
+    .stat-item {
+        margin: 10px 0;
+    }
+    
+    .industry-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .industry-btn {
+        width: 80%;
+        margin: 5px 0;
+    }
+}

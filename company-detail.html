@@ -207,6 +207,41 @@
                         </svg>
                         返回首页
                     </a>
+                    <!-- 企业比较按钮 -->
+                    <button class="compare-btn" id="compareBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        企业比较
+                    </button>
+                </div>
+                
+                <!-- 企业选择弹窗 -->
+                <div id="companySelectModal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>选择企业</h3>
+                            <button class="close-btn" id="closeModalBtn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- 搜索框 -->
+                            <div class="search-container">
+                                <input type="text" id="companySearch" placeholder="输入企业名称搜索">
+                            </div>
+                            
+                            <!-- 企业列表 -->
+                            <div class="company-list" id="companyList">
+                                <!-- 企业列表将由JavaScript生成 -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="cancel-btn" id="cancelBtn">取消</button>
+                            <button class="confirm-btn" id="confirmBtn" disabled>确定</button>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
